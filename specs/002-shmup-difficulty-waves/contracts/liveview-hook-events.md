@@ -17,7 +17,7 @@ Payload hiện có (`tick`, `score`, `width`, `height`, `player`, `player_bullet
 | `difficulty_tier` | số nguyên | Mỗi tick `:playing` | Bậc độ khó hiện tại (HUD / debug). |
 | `play_tick` | số nguyên | Tuỳ chọn | Tick chỉ tính trong `:playing`; hữu ích cho overlay thời gian hoặc QA. |
 
-Mỗi phần tử trong `enemies` (nếu serialize đầy đủ từ server) **có thể** gồm `hp` nếu UI muốn hiển thị thanh máu sau này — **không bắt buộc** cho MVP 002 nếu chỉ đổi logic server.
+**Projection `enemies` (JSON)**: Trạng thái game trong Elixir có thể chứa tuple/atom (ví dụ `:movement`). Trước khi `push_event("frame", …)`, LiveView chỉ gửi các khóa an toàn cho Jason: `x`, `y`, `w`, `h`, và tùy chọn `id`, `hp`. Các trường nội bộ (`movement`, `vx`, `vy`, …) **không** nằm trong payload — hook chỉ cần hình học để vẽ.
 
 ### `phase`
 

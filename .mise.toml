@@ -1,0 +1,5 @@
+﻿# Pin Erlang/Elixir for Phoenix shmup — run `mise install` at repo root.
+# Versions align with Docker image used to scaffold `shmup/` (Elixir 1.18 / OTP 27+).
+[tools]
+erlang = "27.2"
+elixir = "1.18.2-otp-27"

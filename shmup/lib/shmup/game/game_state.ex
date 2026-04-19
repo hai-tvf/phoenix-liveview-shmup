@@ -1,0 +1,63 @@
+defmodule Shmup.Game.GameState do
+  @moduledoc false
+
+  @type phase :: :splash | :playing | :game_over
+
+  @enforce_keys [:phase, :score, :tick, :width, :height]
+  defstruct [
+    :phase,
+    :score,
+    :tick,
+    :width,
+    :height,
+    player: nil,
+    player_bullets: [],
+    enemy_bullets: [],
+    enemies: [],
+    next_id: 1,
+    player_fire_cd: 0,
+    enemy_spawn_cd: 0,
+    enemy_fire_cd: 0,
+    pending_input: %{cx: 0.0, cy: 0.0, primary: false}
+  ]
+
+  @doc "Logical playfield size in game units (matches hook canvas coordinate system)."
+  def default_width, do: 480
+  def default_height, do: 640
+
+  def new_splash do
+    %__MODULE__{
+      phase: :splash,
+      score: 0,
+      tick: 0,
+      width: default_width(),
+      height: default_height()
+    }
+  end
+
+  def new_playing do
+    w = default_width()
+    h = default_height()
+
+    %__MODULE__{
+      phase: :playing,
+      score: 0,
+      tick: 0,
+      width: w,
+      height: h,
+      player: %{x: w / 2, y: h - 60, w: 36, h: 20},
+      player_bullets: [],
+      enemy_bullets: [],
+      enemies: [],
+      next_id: 1,
+      player_fire_cd: 0,
+      enemy_spawn_cd: 30,
+      enemy_fire_cd: 0,
+      pending_input: %{cx: w / 2, cy: h - 60, primary: false}
+    }
+  end
+
+  def new_game_over(%__MODULE__{} = st) do
+    %{st | phase: :game_over}
+  end
+end

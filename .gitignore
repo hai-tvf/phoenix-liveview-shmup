@@ -1,0 +1,21 @@
+﻿# Elixir / Phoenix (repo root + shmup/)
+_build/
+deps/
+*.ez
+erl_crash.dump
+*.beam
+fetch_tmp/
+shmup/_build/
+shmup/deps/
+shmup/priv/static/assets/
+
+# Environment
+.env
+.env.*
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/

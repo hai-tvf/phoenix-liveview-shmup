@@ -1,0 +1,36 @@
+---
+description: Project Development Guidelines
+globs: ["**/*"]
+alwaysApply: true
+---
+
+# phoenix-liveview-shmup Development Guidelines
+
+Auto-generated from all feature plans. Last updated: 2026-04-19
+
+## Active Technologies
+
+- Elixir and Erlang via **Mise** (pin `erlang` + `elixir` to latest stable channels supported by Mise on the developer OS; record exact versions in `.mise.toml` / `.tool-versions` after install). + Phoenix (with LiveView), `esbuild` asset pipeline (default `mix phx.new`), **no Ecto** (`--no-ecto`). (001-shmup-start-gameplay)
+
+## Project Structure
+
+```text
+backend/
+frontend/
+tests/
+```
+
+## Commands
+
+# Add commands for Elixir and Erlang via **Mise** (pin `erlang` + `elixir` to latest stable channels supported by Mise on the developer OS; record exact versions in `.mise.toml` / `.tool-versions` after install).
+
+## Code Style
+
+Elixir and Erlang via **Mise** (pin `erlang` + `elixir` to latest stable channels supported by Mise on the developer OS; record exact versions in `.mise.toml` / `.tool-versions` after install).: Follow standard conventions
+
+## Recent Changes
+
+- 001-shmup-start-gameplay: Added Elixir and Erlang via **Mise** (pin `erlang` + `elixir` to latest stable channels supported by Mise on the developer OS; record exact versions in `.mise.toml` / `.tool-versions` after install). + Phoenix (with LiveView), `esbuild` asset pipeline (default `mix phx.new`), **no Ecto** (`--no-ecto`).
+
+<!-- MANUAL ADDITIONS START -->
+<!-- MANUAL ADDITIONS END -->

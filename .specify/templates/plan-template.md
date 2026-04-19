@@ -1,4 +1,4 @@
-# Implementation Plan: [FEATURE]
+﻿# Implementation Plan: [FEATURE]
 
 **Branch**: `[###-feature-name]` | **Date**: [DATE] | **Spec**: [link]
 **Input**: Feature specification from `/specs/[###-feature-name]/spec.md`
@@ -31,7 +31,16 @@
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+Aligned with `.specify/memory/constitution.md` (Phoenix LiveView vertical shmup):
+
+- [ ] **LiveView-native surface**: Tick/event model and authoritative server-side game state
+  are documented.
+- [ ] **Pure game core**: Collision, movement, spawning, and scoring are assigned to
+  testable modules without LiveView dependencies.
+- [ ] **Testing**: ExUnit strategy for rules; LiveView smoke coverage for critical flows.
+- [ ] **Performance**: Target update cadence and diff/payload approach (assigns, streams,
+  templates) are stated.
+- [ ] **Incremental scope**: MVP slice is explicit; added complexity is justified.
 
 ## Project Structure
 

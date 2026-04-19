@@ -1,50 +1,88 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+﻿<!--
+Sync Impact Report
+- Version change: (template) → 1.0.0
+- Modified principles: N/A (initial adoption; placeholders replaced)
+- Added sections: Stack & Runtime; Development Workflow
+- Removed sections: N/A
+- Templates requiring updates:
+  - .specify/templates/plan-template.md — Constitution Check (✅ updated)
+  - .specify/templates/spec-template.md — (✅ reviewed; no mandatory section changes)
+  - .specify/templates/tasks-template.md — (✅ reviewed; path examples remain generic)
+  - .specify/extensions/git/commands/*.md — (✅ reviewed; agent-agnostic)
+- Follow-up TODOs: none
+-->
+
+# Phoenix LiveView Shmup Constitution
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### I. LiveView-native game surface
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+The vertical-scrolling shooter MUST run as a Phoenix LiveView application: game state
+evolves on the server, and the browser receives updates through LiveView. The plan MUST
+document the tick or event model (for example `handle_info` with `:timer` or periodic
+`send_update`), the authoritative copy of state, and how player input reaches the server.
+Rationale: keeps one source of truth, fits OTP, and avoids duplicating game logic in
+untestable client-only scripts.
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+### II. Pure game core, LiveView at the edge
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+Collision detection, movement, spawning, scoring, and win/lose rules MUST live in plain
+Elixir modules with no direct dependency on `Phoenix.LiveView` or socket structs.
+LiveView modules MUST only translate events, schedule ticks, and assign data for
+templates. Rationale: game rules stay fast to test and refactor; UI remains a thin
+adapter.
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+### III. Test-first rules, targeted LiveView tests
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+New or changed game rules MUST follow red–green–refactor with ExUnit tests against the
+pure modules before integration. LiveView tests MUST cover critical paths (start,
+movement, fire, game over) at least at a smoke level. Rationale: regressions in math and
+collisions are the main risk in a shmup; LiveView tests catch wiring mistakes.
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+### IV. Performance and update budget
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+The plan MUST state a target server update cadence (for example 10–60 Hz) and how assigns,
+streams, or minimal templates keep each render small enough for smooth play. Features
+that increase payload or DOM size MUST justify the cost. Rationale: LiveView games are
+latency- and diff-sensitive; explicit budgets prevent jank.
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+### V. Incremental delivery and simplicity
+
+Ship a minimal vertical slice (player, bullets, enemies, score, restart) before advanced
+patterns (power-ups, bosses, multiplayer). Dependencies and architecture MUST stay as
+simple as the current scope requires (YAGNI). Rationale: a shmup grows complex quickly;
+discipline keeps the codebase maintainable.
+
+## Stack & Runtime
+
+- **Language**: Elixir (current project version).
+- **Web**: Phoenix with LiveView; HTML/CSS for the playfield unless a spec explicitly
+  requires Canvas/WebGL hooks.
+- **Assets**: Follow the Phoenix toolchain (typically esbuild); add LiveView JS hooks
+  only when the specification requires client-side behavior that cannot be expressed with
+  server-driven updates.
+- **Persistence**: Not required for core loop unless the feature spec demands
+  leaderboards or accounts; prefer in-memory or ETS for session game state unless
+  otherwise specified.
+
+## Development Workflow
+
+- Use Spec Kit artifacts (`spec.md`, `plan.md`, `tasks.md`) for non-trivial features;
+  keep them aligned with this constitution.
+- Work on dedicated feature branches; integrate through review when more than one
+  contributor is active.
+- Before merging substantial gameplay changes, verify ExUnit coverage for touched pure
+  modules and that LiveView smoke paths still pass.
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+This constitution supersedes informal conventions when they conflict. Amendments MUST
+update `.specify/memory/constitution.md`, bump **CONSTITUTION_VERSION** per semantic
+versioning (MAJOR: incompatible governance or removed principles; MINOR: new principles or
+material new guidance; PATCH: clarifications and non-semantic edits), and refresh
+dependent templates when gates or mandatory practices change. Feature plans MUST include
+a Constitution Check that references the current principles. Compliance SHOULD be
+reviewed during implementation planning and before release of major gameplay milestones.
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+**Version**: 1.0.0 | **Ratified**: 2026-04-19 | **Last Amended**: 2026-04-19

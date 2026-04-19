@@ -9,6 +9,8 @@ alwaysApply: true
 Auto-generated from all feature plans. Last updated: 2026-04-19
 
 ## Active Technologies
+- Elixir (theo `shmup/mix.exs` và toolchain Mise trong repo). + Phoenix + LiveView; asset pipeline mặc định; **không Ecto** cho vòng chơi. (002-shmup-difficulty-waves)
+- Không lưu độ khó trên server; trạng thái ván trong process LiveView. (002-shmup-difficulty-waves)
 
 - Elixir and Erlang via **Mise** (pin `erlang` + `elixir` to latest stable channels supported by Mise on the developer OS; record exact versions in `.mise.toml` / `.tool-versions` after install). + Phoenix (with LiveView), `esbuild` asset pipeline (default `mix phx.new`), **no Ecto** (`--no-ecto`). (001-shmup-start-gameplay)
 
@@ -29,6 +31,7 @@ tests/
 Elixir and Erlang via **Mise** (pin `erlang` + `elixir` to latest stable channels supported by Mise on the developer OS; record exact versions in `.mise.toml` / `.tool-versions` after install).: Follow standard conventions
 
 ## Recent Changes
+- 002-shmup-difficulty-waves: Added Elixir (theo `shmup/mix.exs` và toolchain Mise trong repo). + Phoenix + LiveView; asset pipeline mặc định; **không Ecto** cho vòng chơi.
 
 - 001-shmup-start-gameplay: Added Elixir and Erlang via **Mise** (pin `erlang` + `elixir` to latest stable channels supported by Mise on the developer OS; record exact versions in `.mise.toml` / `.tool-versions` after install). + Phoenix (with LiveView), `esbuild` asset pipeline (default `mix phx.new`), **no Ecto** (`--no-ecto`).
 

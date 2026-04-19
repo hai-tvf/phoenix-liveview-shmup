@@ -83,16 +83,21 @@ defmodule ShmupWeb.GameLive do
     socket
   end
 
+  # Jason cannot encode enemy :movement tuples — only send drawable fields to the hook.
+  @enemy_snapshot_keys [:x, :y, :w, :h, :id, :hp]
+
   defp snapshot(%GameState{phase: :playing} = g) do
     %{
       tick: g.tick,
       score: g.score,
       width: g.width,
       height: g.height,
+      difficulty_tier: g.difficulty_tier,
+      play_tick: g.play_tick,
       player: g.player,
       player_bullets: g.player_bullets,
       enemy_bullets: g.enemy_bullets,
-      enemies: g.enemies
+      enemies: Enum.map(g.enemies, &Map.take(&1, @enemy_snapshot_keys))
     }
   end
 

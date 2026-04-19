@@ -18,7 +18,9 @@ defmodule Shmup.Game.GameState do
     player_fire_cd: 0,
     enemy_spawn_cd: 0,
     enemy_fire_cd: 0,
-    pending_input: %{cx: 0.0, cy: 0.0, primary: false}
+    pending_input: %{cx: 0.0, cy: 0.0, primary: false},
+    difficulty_tier: 0,
+    play_tick: 0
   ]
 
   @doc "Logical playfield size in game units (matches hook canvas coordinate system)."
@@ -53,7 +55,9 @@ defmodule Shmup.Game.GameState do
       player_fire_cd: 0,
       enemy_spawn_cd: 30,
       enemy_fire_cd: 0,
-      pending_input: %{cx: w / 2, cy: h - 60, primary: false}
+      pending_input: %{cx: w / 2, cy: h - 60, primary: false},
+      difficulty_tier: 0,
+      play_tick: 0
     }
   end
 

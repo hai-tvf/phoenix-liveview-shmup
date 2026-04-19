@@ -119,6 +119,12 @@ export const GameHook = {
       ctx.fillRect(l, t, o.w, o.h)
     }
 
+    if (typeof p.difficulty_tier === "number") {
+      ctx.fillStyle = "#94a3b8"
+      ctx.font = "12px monospace"
+      ctx.fillText(`Tier ${p.difficulty_tier} · t=${p.play_tick ?? p.tick}`, 8, 16)
+    }
+
     drawBox(p.player, "#38bdf8")
     ;(p.player_bullets || []).forEach((b) => drawBox(b, "#fbbf24"))
     ;(p.enemy_bullets || []).forEach((b) => drawBox(b, "#f87171"))

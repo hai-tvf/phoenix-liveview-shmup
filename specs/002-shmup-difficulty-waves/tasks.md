@@ -25,7 +25,7 @@ description: "Task list for 002 shmup difficulty waves"
 
 **Purpose**: Xác nhận môi trường và đường dẫn trùng plan.
 
-- [ ] T001 Verify `shmup/mix.exs` exists and `cd shmup && mix compile` succeeds per `specs/002-shmup-difficulty-waves/quickstart.md`
+- [x] T001 Verify `shmup/mix.exs` exists and `cd shmup && mix compile` succeeds per `specs/002-shmup-difficulty-waves/quickstart.md`
 
 ---
 
@@ -35,8 +35,8 @@ description: "Task list for 002 shmup difficulty waves"
 
 **⚠️ CRITICAL**: Không triển khai US1–US3 cho đến khi phase này hoàn tất.
 
-- [ ] T002 [P] Create `shmup/lib/shmup/game/difficulty.ex` exporting tier helpers (spawn interval, max enemies, enemy fire period, tier cap, optional HP base) aligned with `specs/002-shmup-difficulty-waves/research.md` (200 ticks = 10s at 20 Hz)
-- [ ] T003 [P] Extend `shmup/lib/shmup/game/game_state.ex` with `difficulty_tier` and `play_tick` (defaults in `new_playing/0`)
+- [x] T002 [P] Create `shmup/lib/shmup/game/difficulty.ex` exporting tier helpers (spawn interval, max enemies, enemy fire period, tier cap, optional HP base) aligned with `specs/002-shmup-difficulty-waves/research.md` (200 ticks = 10s at 20 Hz)
+- [x] T003 [P] Extend `shmup/lib/shmup/game/game_state.ex` with `difficulty_tier` and `play_tick` (defaults in `new_playing/0`)
 
 **Checkpoint**: Foundation ready — user story implementation can begin
 
@@ -50,9 +50,9 @@ description: "Task list for 002 shmup difficulty waves"
 
 ### Implementation for User Story 1
 
-- [ ] T004 [US1] In `shmup/lib/shmup/game/simulation.ex`: increment `play_tick` each `step` while playing; advance `difficulty_tier` on tier boundary (every 200 `play_tick` at current tick rate); replace fixed spawn interval with `Difficulty` + enforce `max_enemies` cap
-- [ ] T005 [P] [US1] In `shmup/lib/shmup/game/simulation.ex`: replace fixed enemy fire cadence with tier-based period from `Difficulty` (keep enemy bullets authoritative per existing collision rules)
-- [ ] T006 [P] [US1] In `shmup/lib/shmup_web/live/game_live.ex`: add `difficulty_tier` and `play_tick` to `snapshot/1` for `push_event("frame", ...)` per `specs/002-shmup-difficulty-waves/contracts/liveview-hook-events.md`
+- [x] T004 [US1] In `shmup/lib/shmup/game/simulation.ex`: increment `play_tick` each `step` while playing; advance `difficulty_tier` on tier boundary (every 200 `play_tick` at current tick rate); replace fixed spawn interval with `Difficulty` + enforce `max_enemies` cap
+- [x] T005 [P] [US1] In `shmup/lib/shmup/game/simulation.ex`: replace fixed enemy fire cadence with tier-based period from `Difficulty` (keep enemy bullets authoritative per existing collision rules)
+- [x] T006 [P] [US1] In `shmup/lib/shmup_web/live/game_live.ex`: add `difficulty_tier` and `play_tick` to `snapshot/1` for `push_event("frame", ...)` per `specs/002-shmup-difficulty-waves/contracts/liveview-hook-events.md`
 
 **Checkpoint**: User Story 1 delivers tiered spawn rate and enemy fire + observable tier in snapshots
 
@@ -66,8 +66,8 @@ description: "Task list for 002 shmup difficulty waves"
 
 ### Implementation for User Story 2
 
-- [ ] T007 [US2] In `shmup/lib/shmup/game/physics.ex`: add movement updaters for at least `:straight` and `:sine` (or segmented) modes using `play_tick` / per-enemy parameters from `specs/002-shmup-difficulty-waves/data-model.md`
-- [ ] T008 [US2] In `shmup/lib/shmup/game/simulation.ex`: assign movement mode/params when spawning enemies from `difficulty_tier`; route `move_all/1` through `Physics` so position updates match selected mode
+- [x] T007 [US2] In `shmup/lib/shmup/game/physics.ex`: add movement updaters for at least `:straight` and `:sine` (or segmented) modes using `play_tick` / per-enemy parameters from `specs/002-shmup-difficulty-waves/data-model.md`
+- [x] T008 [US2] In `shmup/lib/shmup/game/simulation.ex`: assign movement mode/params when spawning enemies from `difficulty_tier`; route `move_all/1` through `Physics` so position updates match selected mode
 
 **Checkpoint**: User Story 2 complete — movement visibly evolves with tier
 
@@ -81,8 +81,8 @@ description: "Task list for 002 shmup difficulty waves"
 
 ### Implementation for User Story 3
 
-- [ ] T009 [US3] In `shmup/lib/shmup/game/simulation.ex`: set each spawned enemy’s `hp` from `Difficulty` / `difficulty_tier` per `specs/002-shmup-difficulty-waves/data-model.md`
-- [ ] T010 [US3] In `shmup/lib/shmup/game/collision.ex`: update `resolve_player_bullets_vs_enemies/3` to decrement enemy `hp`, remove enemy and apply score only when `hp <= 0`, and consume bullet on hit (MVP single-hit damage)
+- [x] T009 [US3] In `shmup/lib/shmup/game/simulation.ex`: set each spawned enemy’s `hp` from `Difficulty` / `difficulty_tier` per `specs/002-shmup-difficulty-waves/data-model.md`
+- [x] T010 [US3] In `shmup/lib/shmup/game/collision.ex`: update `resolve_player_bullets_vs_enemies/3` to decrement enemy `hp`, remove enemy and apply score only when `hp <= 0`, and consume bullet on hit (MVP single-hit damage)
 
 **Checkpoint**: User Story 3 complete — resistance scales with tier
 
@@ -92,8 +92,8 @@ description: "Task list for 002 shmup difficulty waves"
 
 **Purpose**: UX nhẹ, xác nhận regression và quickstart.
 
-- [ ] T011 [P] Optionally render `difficulty_tier` (or elapsed play time) in `shmup/assets/js/hooks/game_hook.js` when `frame` payload includes new fields
-- [ ] T012 Run `cd shmup && mix test` and manual validation steps in `specs/002-shmup-difficulty-waves/quickstart.md`
+- [x] T011 [P] Optionally render `difficulty_tier` (or elapsed play time) in `shmup/assets/js/hooks/game_hook.js` when `frame` payload includes new fields
+- [x] T012 Run `cd shmup && mix test` and manual validation steps in `specs/002-shmup-difficulty-waves/quickstart.md`
 
 ---
 

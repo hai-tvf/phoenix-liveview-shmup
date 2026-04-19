@@ -1,10 +1,9 @@
 defmodule Shmup.Game.Simulation do
   @moduledoc false
 
-  alias Shmup.Game.{Collision, GameState, Physics}
+  alias Shmup.Game.{Collision, Difficulty, GameState, Physics}
 
   @player_fire_cooldown 10
-  @enemy_spawn_interval 55
   @points_per_kill 10
 
   def step(%GameState{phase: p} = s) when p != :playing, do: s
@@ -12,6 +11,7 @@ defmodule Shmup.Game.Simulation do
   def step(%GameState{} = s) do
     s
     |> Map.update!(:tick, &(&1 + 1))
+    |> advance_play_time()
     |> apply_input()
     |> tick_cooldowns()
     |> maybe_spawn_enemy()
@@ -21,6 +21,20 @@ defmodule Shmup.Game.Simulation do
     |> resolve_hits()
     |> cull_offscreen()
     |> check_player_death()
+  end
+
+  defp advance_play_time(%GameState{} = s) do
+    play_tick = s.play_tick + 1
+    tier = s.difficulty_tier
+
+    tier =
+      if play_tick > 0 && rem(play_tick, Difficulty.tier_period_ticks()) == 0 do
+        min(tier + 1, Difficulty.tier_max())
+      else
+        tier
+      end
+
+    %{s | play_tick: play_tick, difficulty_tier: tier}
   end
 
   defp apply_input(%GameState{} = s) do
@@ -39,24 +53,60 @@ defmodule Shmup.Game.Simulation do
   defp maybe_spawn_enemy(%GameState{enemy_spawn_cd: cd} = s) when cd != 0, do: s
 
   defp maybe_spawn_enemy(%GameState{} = s) do
+    max_e = Difficulty.max_enemies(s.difficulty_tier)
+
+    if length(s.enemies) >= max_e do
+      interval = Difficulty.spawn_interval(s.difficulty_tier)
+      %{s | enemy_spawn_cd: interval}
+    else
+      spawn_one_enemy(s)
+    end
+  end
+
+  defp spawn_one_enemy(%GameState{} = s) do
     margin = 40
-    # deterministic pseudo-random x from tick
     x = margin + rem(s.tick * 7919, max(1, trunc(s.width) - 2 * margin))
+    tier = s.difficulty_tier
+    id = s.next_id
+    mov = movement_for_tier(tier, id)
+    hp = Difficulty.enemy_hp(tier)
 
     enemy = %{
+      id: id,
       x: x * 1.0,
       y: 30.0,
       w: 32,
       h: 28,
       vy: 1.8,
-      vx: 0.0
+      vx: 0.0,
+      movement: mov,
+      hp: hp
     }
+
+    interval = Difficulty.spawn_interval(tier)
 
     %{
       s
       | enemies: [enemy | s.enemies],
-        enemy_spawn_cd: @enemy_spawn_interval
+        enemy_spawn_cd: interval,
+        next_id: id + 1
     }
+  end
+
+  defp movement_for_tier(tier, id) do
+    t = min(tier, Difficulty.tier_max())
+    phase0 = id * 0.73
+
+    cond do
+      t <= 1 ->
+        :straight
+
+      t <= 4 ->
+        {:sine, phase0, 2.2 + t * 0.35, 0.085}
+
+      true ->
+        {:composite, phase0, 3.5 + min(t, 10) * 0.25, 0.11, 1.2 + t * 0.05}
+    end
   end
 
   defp fire_player_bullet(%GameState{pending_input: %{primary: false}} = s), do: s
@@ -90,19 +140,27 @@ defmodule Shmup.Game.Simulation do
         %{b | y: b.y + b.vy}
       end)
 
+    pt = s.play_tick
+
     ens =
       Enum.map(s.enemies, fn e ->
-        %{e | y: e.y + e.vy, x: e.x + e.vx}
+        Physics.step_enemy(e, pt)
       end)
 
     %{s | player_bullets: pbs, enemy_bullets: ebs, enemies: ens}
   end
 
-  defp enemy_fire(%GameState{enemies: ens, tick: t} = s) do
-    if rem(t, 50) != 0 or ens == [] do
+  defp enemy_fire(%GameState{enemies: []} = s), do: s
+
+  defp enemy_fire(%GameState{play_tick: pt} = s) when pt <= 0, do: s
+
+  defp enemy_fire(%GameState{} = s) do
+    period = Difficulty.enemy_fire_period(s.difficulty_tier)
+
+    if rem(s.play_tick, period) != 0 do
       s
     else
-      e = List.first(ens)
+      e = List.first(s.enemies)
 
       b = %{
         x: e.x,

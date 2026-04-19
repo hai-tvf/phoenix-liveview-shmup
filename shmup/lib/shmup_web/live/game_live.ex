@@ -89,6 +89,8 @@ defmodule ShmupWeb.GameLive do
       score: g.score,
       width: g.width,
       height: g.height,
+      difficulty_tier: g.difficulty_tier,
+      play_tick: g.play_tick,
       player: g.player,
       player_bullets: g.player_bullets,
       enemy_bullets: g.enemy_bullets,
